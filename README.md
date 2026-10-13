@@ -11,7 +11,7 @@ Play any video, or a link, as your desktop wallpaper. One small `.exe`, no .NET,
 ![Language](https://img.shields.io/badge/made%20with-C%2B%2B%20%2F%20Win32-c8213f)
 ![License](https://img.shields.io/badge/license-MIT-1f1f23)
 
-[**Download**](../../releases/latest) &nbsp;·&nbsp; [Features](#features) &nbsp;·&nbsp; [Using Kizoku](#using-kizoku) &nbsp;·&nbsp;
+[**Download**](../../releases/latest) &nbsp;·&nbsp; [Features](#features) &nbsp;·&nbsp; [Using Kizoku](#using-kizoku)
 
 </div>
 
