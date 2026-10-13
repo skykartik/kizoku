@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/kizoku_logo.png" alt="Kizoku" width="128" />
+<img src="kizoku_logo.png" alt="Kizoku" width="128" />
 
 # Kizoku &nbsp;<sub>貴族</sub>
 
