@@ -1,6 +1,5 @@
 {
   "version": "1.2.0",
-  "url": "https://github.com/YOUR_USERNAME/kizoku/releases/download/v1.2.1/Kizoku.exe",
-  "sha256": "PASTE_THE_SHA256_OF_Kizoku.exe_HERE",
+  "url": "https://github.com/skykartik/kizoku/releases/download/v1.2.0/Kizoku.exe",
   "notes": "What's new in this version"
 }
