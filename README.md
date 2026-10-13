@@ -41,6 +41,9 @@ with a maximized window.
 - **Updates built in** &ndash; check for updates, or install the new version with one click. Downloads can be verified with a SHA-256 hash.
 - **Private** &ndash; no telemetry, no accounts. See [Privacy](#privacy).
 
+<img width="800" height="450" alt="{5822888A-1D29-488E-ACDB-3CB550B1DEDC}" src="https://github.com/user-attachments/assets/39d157cf-a669-4177-8918-f9d29ed124e8" /> 
+
+
 ## Download
 
 1. Go to the [**latest release**](../../releases/latest) and download `Kizoku.exe`.
