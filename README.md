@@ -5,7 +5,7 @@
 # Kizoku &nbsp;<sub>貴族</sub>
 
 **A tiny, native live wallpaper app for Windows.**
-Play any video, or a link, as your desktop wallpaper. One small `.exe`, no .NET, no WebView2.
+Play any video, or a link, as your desktop wallpaper. One small `.exe` .
 
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-1f1f23)
 ![Language](https://img.shields.io/badge/made%20with-C%2B%2B%20%2F%20Win32-c8213f)
