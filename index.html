@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="google-site-verification" content="U-n6SHzMas105WW0pUBBedWqUDVA4KGtQZ1wRYm1H2c" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kizoku — Live wallpaper for Windows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Shippori+Mincho+B1:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efe8;--fg:#0d0d0f;--mut:#6b6860;--line:rgba(0,0,0,.13);--card:rgba(0,0,0,.04);--acc:#c8102e;--gold:#a87a1c;--glow:rgba(200,16,46,.12);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#07070a;--fg:#f2efe9;--mut:#8b8a94;--line:rgba(255,255,255,.11);--card:rgba(255,255,255,.04);--acc:#ff3b3b;--gold:#e8c27a;--glow:rgba(255,59,59,.14);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#07070a;--fg:#f2efe9;--mut:#8b8a94;--line:rgba(255,255,255,.11);--card:rgba(255,255,255,.04);--acc:#ff3b3b;--gold:#e8c27a;--glow:rgba(255,59,59,.14);color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.55 "Inter Tight",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+#bar{position:fixed;left:0;right:0;top:0;height:2px;background:var(--acc);transform-origin:0 50%;transform:scaleX(0);z-index:60}
+#glow{position:fixed;left:0;top:0;width:620px;height:620px;margin:-310px 0 0 -310px;background:radial-gradient(circle,var(--glow),transparent 62%);pointer-events:none;z-index:1;will-change:transform}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:calc(env(safe-area-inset-top,0px) + 14px) 0 14px;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:baseline;gap:10px;font-weight:600;font-size:19px;letter-spacing:-.02em}
+.logo b{font-family:"Shippori Mincho B1",serif;color:var(--acc);font-size:21px}
+nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0;font-size:15px;color:var(--mut)}
+nav ul a:hover{color:var(--fg)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:99px;font-weight:500;font-size:16px;border:1px solid var(--line);transition:background .3s,color .3s,border-color .3s;will-change:transform}
+.btn.p{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn.p:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.g:hover{border-color:var(--fg)}
+nav .btn{padding:9px 20px;font-size:14px}
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;padding:120px 0 80px}
+#hc{position:absolute;inset:0;width:100%;height:100%}
+.kan{position:absolute;right:-2vw;top:50%;translate:0 -50%;font:700 min(46vw,560px)/.8 "Shippori Mincho B1",serif;writing-mode:vertical-rl;color:transparent;-webkit-text-stroke:1px var(--line);user-select:none;pointer-events:none;opacity:.9}
+.hero .wrap{position:relative;z-index:2}
+h1{font-weight:600;font-size:clamp(3.4rem,11.5vw,10.5rem);line-height:.9;letter-spacing:-.055em;margin:22px 0 28px}
+h1 em{font-style:normal;color:var(--acc)}
+.sub{max-width:520px;font-size:clamp(1.05rem,2vw,1.3rem);color:var(--mut);margin:0 0 38px}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.meta{display:flex;gap:28px;flex-wrap:wrap;margin-top:56px}
+.rv{opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1),filter .9s}
+.rv.in{opacity:1;transform:none;filter:none}
+.mq{border-block:1px solid var(--line);overflow:hidden;padding:20px 0;position:relative;z-index:2;background:var(--bg)}
+.mq div{display:flex;gap:56px;width:max-content;animation:mq 34s linear infinite;font-size:clamp(1.6rem,3.4vw,2.6rem);font-weight:500;letter-spacing:-.03em;white-space:nowrap}
+.mq span:nth-child(even){color:var(--acc);font-family:"Shippori Mincho B1",serif}
+@keyframes mq{to{transform:translateX(-50%)}}
+section{padding:130px 0;position:relative;z-index:2}
+h2{font-weight:600;font-size:clamp(2.4rem,6vw,5rem);line-height:.98;letter-spacing:-.045em;margin:16px 0 22px;max-width:900px}
+.lead{color:var(--mut);max-width:560px;font-size:1.15rem}
+.stage{display:grid;grid-template-columns:1.7fr 1fr;gap:28px;margin-top:56px;align-items:stretch}
+.desk{position:relative;aspect-ratio:16/10;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:#000;box-shadow:0 40px 120px -30px var(--glow),0 0 0 1px var(--line)}
+#dc{position:absolute;inset:0;width:100%;height:100%}
+#dim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.ico{position:absolute;left:3%;display:flex;flex-direction:column;align-items:center;gap:4px;font:11px "Inter Tight",sans-serif;color:#fff;text-shadow:0 1px 4px #0008}
+.ico i{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.2);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25)}
+.tb{position:absolute;left:50%;bottom:2.5%;translate:-50% 0;display:flex;gap:8px;padding:7px 12px;border-radius:14px;background:rgba(20,20,26,.55);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.15)}
+.tb i{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.28)}
+.win{position:absolute;inset:7% 8% 12%;border-radius:12px;background:#1b1b22;border:1px solid #fff2;transform:translateY(120%);transition:transform .7s cubic-bezier(.2,.8,.2,1);padding:14px;color:#9a9aa8;font:12px "JetBrains Mono",monospace}
+.win b{display:block;height:9px;width:46%;background:#2b2b35;border-radius:5px;margin:10px 0}
+.on .win{transform:none}
+.gm{position:absolute;inset:0;background:#05050a;display:grid;place-items:center;color:#7d7d92;font:12px "JetBrains Mono",monospace;letter-spacing:.2em;opacity:0;transition:opacity .5s}
+.gm.on{opacity:1}
+.pill{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:99px;background:rgba(10,10,14,.6);backdrop-filter:blur(10px);color:#fff;font:11px "JetBrains Mono",monospace;letter-spacing:.1em;border:1px solid #fff2;z-index:3}
+.pill u{width:7px;height:7px;border-radius:50%;background:#35e08a;box-shadow:0 0 12px #35e08a;transition:.3s}
+.paused .pill u{background:#ffb02e;box-shadow:0 0 12px #ffb02e}
+.panel{border:1px solid var(--line);border-radius:20px;background:var(--card);padding:26px;display:flex;flex-direction:column;gap:22px}
+.panel h3{margin:0;font-size:1.25rem;letter-spacing:-.02em}
+.fld label{display:flex;justify-content:space-between;margin-bottom:8px}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.tg{display:grid;gap:8px}
+.tg button{font:inherit;text-align:left;cursor:pointer;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;transition:.25s}
+.tg button:hover{border-color:var(--fg)}
+.tg button[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tg button span{font-size:12px;opacity:.7}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:56px}
+.cmp>div{border:1px solid var(--line);border-radius:22px;padding:34px;background:var(--card)}
+.cmp .k{background:var(--fg);color:var(--bg)}
+.cmp h3{margin:0 0 20px;font-size:1.5rem;letter-spacing:-.03em}
+.cmp ul{margin:0;padding:0;list-style:none;display:grid;gap:14px}
+.cmp li{padding-top:14px;border-top:1px solid var(--line);opacity:.85}
+.cmp .k li{border-color:rgba(128,128,128,.35);opacity:1}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+.card{position:relative;border:1px solid var(--line);border-radius:20px;padding:30px;min-height:230px;background:var(--card);overflow:hidden;transform-style:preserve-3d;transition:transform .25s ease-out,border-color .3s;--mx:50%;--my:50%}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(360px circle at var(--mx) var(--my),var(--glow),transparent 70%);opacity:0;transition:opacity .3s}
+.card:hover::before{opacity:1}
+.card:hover{border-color:var(--mut)}
+.card .n{position:relative;color:var(--acc)}
+.card h3{position:relative;margin:50px 0 8px;font-size:1.4rem;letter-spacing:-.03em;line-height:1.1}
+.card p{position:relative;margin:0;color:var(--mut);font-size:15px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--line)}
+.stats div{padding:56px 20px;border-right:1px solid var(--line)}
+.stats div:last-child{border:0}
+.stats b{display:block;font-weight:500;font-size:clamp(3.6rem,9vw,8rem);line-height:.9;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.end{text-align:center;overflow:hidden}
+.end h2{margin-inline:auto;font-size:clamp(3rem,9vw,8rem)}
+.end .cta{justify-content:center;margin-top:40px}
+.fine{max-width:620px;margin:56px auto 0;color:var(--mut);font-size:14px}
+footer{border-top:1px solid var(--line);padding:34px 0;position:relative;z-index:2}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:900px){nav ul{display:none}.stage,.cmp{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}section{padding:90px 0}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.kan{opacity:.5}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none;filter:none}}
+</style>
+</head>
+<body>
+<div id="bar"></div><div id="glow"></div>
+<nav><div class="wrap">
+<a href="#top" class="logo"><b>貴族</b>Kizoku</a>
+<ul><li><a href="#why">Why</a></li><li><a href="#features">Features</a></li><li><a href="#download">Download</a></li></ul>
+<a class="btn p mag" href="https://github.com/skykartik/kizoku/releases/latest/download/Kizoku.exe" download>Download</a>
+</div></nav>
+
+<header class="hero" id="top">
+<canvas id="hc"></canvas>
+<div class="kan" id="kan">貴族</div>
+<div class="wrap">
+<div class="mono rv">Live wallpaper · Windows 10 | 11</div>
+<h1 class="rv">Your desktop,<br><em id="scr">alive.</em></h1>
+<p class="sub rv">Kizoku turns any video or link into your wallpaper. One small native app. No engine, no accounts, no noise.</p>
+<div class="cta rv">
+<a class="btn p mag" href="https://github.com/skykartik/kizoku/releases/latest/download/Kizoku.exe" download>Download for Windows →</a>
+<a class="btn g mag" href="https://github.com/skykartik/kizoku" target="_blank" rel="noopener">View on GitHub</a>
+</div>
+<div class="meta rv mono"><span>Free · MIT</span><span>Single .exe</span><span>No telemetry</span></div>
+</div>
+</header>
+
+<div class="mq"><div id="mq"></div></div>
+
+<section id="why"><div class="wrap">
+<div class="mono rv">Why Kizoku</div>
+<h2 class="rv">Most live wallpaper tools are heavy.</h2>
+<p class="lead rv">A browser engine, a runtime, a background service. Kizoku is one native Windows program that draws its own interface.</p>
+<div class="cmp">
+<div class="rv"><h3>The usual way</h3><ul><li>Ships a whole browser engine or runtime</li><li>Background service that stays resident</li><li>Often wants an account</li><li>Keeps rendering behind your game</li></ul></div>
+<div class="k rv"><h3>Kizoku</h3><ul><li>One native .exe, nothing to install around it</li><li>Uses the codecs already on your PC</li><li>No accounts, no telemetry</li><li>Pauses for games, full-screen apps and maximized windows</li></ul></div>
+</div>
+</div></section>
+
+<section id="features" style="padding-top:40px"><div class="wrap">
+<div class="mono rv">Features</div>
+<h2 class="rv">Small app.<br>Considered details.</h2>
+<div class="grid" id="grid"></div>
+</div></section>
+
+<div class="stats" id="stats">
+<div class="rv"><b data-n="1">1</b><span class="mono">executable</span></div>
+<div class="rv"><b data-n="0">0</b><span class="mono">telemetry</span></div>
+<div class="rv"><b data-n="0">0</b><span class="mono">accounts</span></div>
+<div class="rv"><b data-n="MIT">MIT</b><span class="mono">open source license</span></div>
+</div>
+
+<section class="end" id="download"><div class="wrap">
+<div class="mono rv">Get Kizoku</div>
+<h2 class="rv">Put something<br>beautiful behind everything.</h2>
+<div class="cta rv">
+<a class="btn p mag" href="https://github.com/skykartik/kizoku/releases/latest/download/Kizoku.exe" download>Download Kizoku.exe →</a>
+<a class="btn g mag" href="https://github.com/skykartik/kizoku" target="_blank" rel="noopener">Read the source</a>
+</div>
+<p class="fine rv">Not code-signed yet, so Windows SmartScreen may warn you: choose More info, then Run anyway. You can check the SHA-256 hash in the release notes. Covers the primary monitor. Link wallpapers from sites play without sound.</p>
+</div></section>
+
+<footer><div class="wrap mono"><span>© Kizoku 貴族 · MIT License</span><a href="https://github.com/skykartik/kizoku" target="_blank" rel="noopener">github.com/skykartik/kizoku</a></div></footer>
+
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)},rm=matchMedia('(prefers-reduced-motion:reduce)').matches,dpr=Math.min(devicePixelRatio||1,2);
+var cs=function(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()};
+
+/* marquee + cards */
+var words=['Native','貴族','Quiet','貴族','Private','貴族','Open source','貴族','One file','貴族'],m='';
+for(var i=0;i<2;i++)words.forEach(function(w){m+='<span>'+w+'</span>'});
+$('#mq').innerHTML=m;
+var F=[['Any video, any time','Plays through Windows Media Foundation, so H.264 and more work out of the box.'],['Loops without a blink','Restarts just before the end so the last frame never flashes black.'],['A library of looks','Every wallpaper you apply is saved with a thumbnail. One click brings it back.'],['Paste a link','Direct video links or YouTube-style pages, downloaded once and kept locally.'],['Smart pause','Pauses for full-screen apps, games, maximized windows, and optionally on battery.'],['Lives in the tray','Close the window and it keeps playing. Optionally starts with Windows.'],['Drag, drop, done','Drop a video on the window, or right-click a file to set it.'],['Dim, volume, speed, fit','The basics, with smooth sliders. Fit or stretch the video to your screen.'],['Private by default','No telemetry, no accounts. The network is used only when you ask.']];
+$('#grid').innerHTML=F.map(function(f,i){return '<div class="card rv"><div class="n mono">0'+(i+1)+'</div><h3>'+f[0]+'</h3><p>'+f[1]+'</p></div>'}).join('');
+
+/* reveal */
+var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.12});
+document.querySelectorAll('.rv').forEach(function(el,i){el.style.transitionDelay=(i%4)*80+'ms';io.observe(el)});
+
+/* scroll progress + parallax */
+var kan=$('#kan');
+addEventListener('scroll',function(){var h=document.documentElement,p=scrollY/(h.scrollHeight-innerHeight);$('#bar').style.transform='scaleX('+p+')';kan.style.transform='translateY('+scrollY*.18+'px)'},{passive:true});
+
+/* cursor glow, magnetic buttons, tilt */
+var g=$('#glow'),fine=matchMedia('(pointer:fine)').matches;
+if(fine&&!rm){
+addEventListener('pointermove',function(e){g.style.transform='translate('+e.clientX+'px,'+e.clientY+'px)'});
+document.querySelectorAll('.mag').forEach(function(b){
+b.addEventListener('pointermove',function(e){var r=b.getBoundingClientRect();b.style.transform='translate('+(e.clientX-r.left-r.width/2)*.22+'px,'+(e.clientY-r.top-r.height/2)*.35+'px)'});
+b.addEventListener('pointerleave',function(){b.style.transform=''})});
+document.querySelectorAll('.card').forEach(function(c){
+c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%');c.style.transform='perspective(800px) rotateX('+(.5-y)*7+'deg) rotateY('+(x-.5)*9+'deg)'});
+c.addEventListener('pointerleave',function(){c.style.transform=''})})}
+else g.style.display='none';
+
+/* text scramble */
+var s=$('#scr'),fin=s.textContent,ch='貴族ABCDEFGHJKLMNPRSTUVWXYZ#%&';
+if(!rm){s.style.display='inline-block';s.style.minWidth=s.offsetWidth+'px';var f=0;
+var iv=setInterval(function(){s.textContent=fin.split('').map(function(c,i){return i<f/3?c:ch[Math.random()*ch.length|0]}).join('');if(++f>fin.length*3+3){clearInterval(iv);s.textContent=fin}},45)}
+
+/* stat roll */
+var so=new IntersectionObserver(function(e){e.forEach(function(x){if(!x.isIntersecting)return;so.disconnect();document.querySelectorAll('[data-n]').forEach(function(b,i){var n=b.dataset.n,t=0,v=setInterval(function(){b.textContent=t++<14?Math.random()*10|0:n;if(t>14)clearInterval(v)},50+i*10)})})},{threshold:.4});
+if(!rm)so.observe($('#stats'));
+
+/* hero wave field */
+var hc=$('#hc'),hx=hc.getContext('2d'),W,H,mx=-999,my=-999,t=0,hv=true,fg,ac,k=0;
+function hr(){W=hc.clientWidth;H=hc.clientHeight;hc.width=W*dpr;hc.height=H*dpr;hx.setTransform(dpr,0,0,dpr,0,0)}
+hr();addEventListener('resize',hr);
+new IntersectionObserver(function(e){hv=e[0].isIntersecting}).observe(hc);
+hc.parentNode.addEventListener('pointermove',function(e){var r=hc.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});
+function hd(){requestAnimationFrame(hd);if(!hv)return;if(k++%30==0){fg=cs('--fg');ac=cs('--acc')}
+t+=rm?0:.012;hx.clearRect(0,0,W,H);var N=44,top=H*.16,sp=H*.7/N;
+for(var i=0;i<N;i++){var y0=top+i*sp;hx.beginPath();
+for(var x=0;x<=W+14;x+=14){var dx=x-mx,dy=y0-my,b=-70*Math.exp(-(dx*dx+dy*dy)/(2*150*150)),
+y=y0+Math.sin(x*.004+t+i*.14)*24+Math.sin(x*.011-t*1.4+i*.3)*8+b;x?hx.lineTo(x,y):hx.moveTo(x,y)}
+var a=i%9==4;hx.strokeStyle=a?ac:fg;hx.globalAlpha=a?.75:.05+.2*(i/N);hx.lineWidth=a?1.4:1;hx.stroke()}
+hx.globalAlpha=1}
+hd();
+
+})();
+</script>
+</body>
+</html>
